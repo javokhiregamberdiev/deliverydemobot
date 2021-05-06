@@ -53,12 +53,19 @@ public class ProfileFillingHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_CODE)) {
             replyMessageToUser = replyMessageService.getReplyMessage1(chatId, "Enter confirm code");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_FINISH);
+            if (!userAnswer.startsWith("+9989")){
+                replyMessageToUser = replyMessageService.getReplyMessage1(chatId, "nomerni quyidagicha kirting: +9989********");
+                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CODE);
+            }else{
+                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_FINISH);
+            }
         }
         if (botState.equals(BotState.ASK_FINISH)) {
             replyMessageToUser = mainMenuService.getMainMenuMessage(chatId, "Use main Menu");
             userDataCache.setUsersCurrentBotState(userId, BotState.MAIN_MENU);
         }
         return replyMessageToUser;
+
+//        "salom"
     }
 }

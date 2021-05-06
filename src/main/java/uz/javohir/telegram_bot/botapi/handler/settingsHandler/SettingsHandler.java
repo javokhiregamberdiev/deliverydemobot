@@ -10,6 +10,7 @@ import uz.javohir.telegram_bot.service.SettingService;
 
 @Component
 public class SettingsHandler implements InputMessageHandler {
+
     @Autowired
     private SettingService settingService;
 
