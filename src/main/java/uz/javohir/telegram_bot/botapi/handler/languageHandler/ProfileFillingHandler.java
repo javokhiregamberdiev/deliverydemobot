@@ -66,6 +66,5 @@ public class ProfileFillingHandler implements InputMessageHandler {
         }
         return replyMessageToUser;
 
-//        "salom"
     }
 }
