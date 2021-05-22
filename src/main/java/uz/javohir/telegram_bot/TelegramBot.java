@@ -14,7 +14,7 @@ public class TelegramBot extends TelegramWebhookBot {
     @Autowired
     private TelegramFacade telegramFacade;
 
-    private String webHookPath = "https://97f73a4682d5.ngrok.io";
+    private String webHookPath = "https://332a6bd1c3c6.ngrok.io";
     private String botUserName = "@javohir12345bot";
     private String botToken = "1756876870:AAFuwTUoqdATfEmPif0dtNR7PiOqa3VwaSc";
 
