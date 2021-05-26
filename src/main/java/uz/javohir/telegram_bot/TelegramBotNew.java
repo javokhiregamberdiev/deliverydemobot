@@ -9,6 +9,7 @@ import uz.javohir.telegram_bot.botapi.TelegramFacade;
 
 @Component
 public class TelegramBotNew extends TelegramWebhookBot {
+
     @Autowired
     private TelegramFacade telegramFacade;
 

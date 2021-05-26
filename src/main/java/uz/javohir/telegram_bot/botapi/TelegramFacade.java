@@ -24,10 +24,13 @@ public class TelegramFacade {
 
     public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
-
-
-
         Message message = update.getMessage();
+        if (message.hasContact() && message != null){
+            BotState botState = BotState.ASK_FINISH;
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), botState);
+            replyMessage = botStateContext.processInputMessage(botState, message);
+        }
+
         if (message != null && message.hasText()) {
             replyMessage = handleInputMessage(message);
         }
@@ -48,13 +51,13 @@ public class TelegramFacade {
                 botState = BotState.ASK_LANG;
                 break;
             case "Uzbek tili":
-                botState = BotState.ASK_FILLING_PROFILE;
+                botState = BotState.ASK_PHONE;
                 break;
             case "English":
-                botState = BotState.ASK_FILLING_PROFILE;
+                botState = BotState.ASK_PHONE;
                 break;
             case "Русский язык":
-                botState = BotState.ASK_FILLING_PROFILE;
+                botState = BotState.ASK_PHONE;
                 break;
             case "Order":
                 botState = BotState.ORDER;
@@ -71,7 +74,7 @@ public class TelegramFacade {
             case "Cashback":
                 botState = BotState.CASHBACK;
                 break;
-            case "Events":
+            case "Tracking":
                 botState = BotState.EVENTS;
                 break;
             case "Leave feedback":
@@ -90,7 +93,7 @@ public class TelegramFacade {
                 botState = BotState.SETTINGS;
                 break;
             case "Select language":
-                botState = BotState.SETTINGS;
+                botState = BotState.SELECT_LANG;
                 break;
             case "Select city":
                 botState = BotState.SETTINGS;

@@ -29,7 +29,7 @@ public class LangHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
         if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_LANG)) {
             replyToUser = langService.getLanguageMessage(message.getChatId(), "Choose the language" + Emojis.NOTIFICATION_MARK_FAILED);
-            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_FILLING_PROFILE);
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_PHONE);
         }
         return replyToUser;
     }

@@ -29,34 +29,34 @@ public class MainMenuService {
         KeyboardButton keyboardButton1 = new KeyboardButton();
         keyboardButton1.setText("Order");
         KeyboardButton keyboardButton2 = new KeyboardButton();
-        keyboardButton2.setText("Cashback");
+        keyboardButton2.setText("Settings");
         KeyboardButton keyboardButton3 = new KeyboardButton();
-        keyboardButton3.setText("Events");
+        keyboardButton3.setText("Tracking");
         KeyboardButton keyboardButton4 = new KeyboardButton();
-        keyboardButton4.setText("Leave feedback");
-        KeyboardButton keyboardButton5 = new KeyboardButton();
-        keyboardButton5.setText("Information");
-        KeyboardButton keyboardButton6 = new KeyboardButton();
-        keyboardButton6.setText("Settings");
+//        keyboardButton4.setText("Leave feedback");
+//        KeyboardButton keyboardButton5 = new KeyboardButton();
+//        keyboardButton5.setText("Information");
+//        KeyboardButton keyboardButton6 = new KeyboardButton();
+//        keyboardButton6.setText("Settings");
 
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
-        KeyboardRow row3 = new KeyboardRow();
-        KeyboardRow row4 = new KeyboardRow();
+//        KeyboardRow row3 = new KeyboardRow();
+//        KeyboardRow row4 = new KeyboardRow();
 
         row1.add(keyboardButton1);
         row2.add(keyboardButton2);
         row2.add(keyboardButton3);
-        row3.add(keyboardButton4);
-        row3.add(keyboardButton5);
-        row4.add(keyboardButton6);
+//        row3.add(keyboardButton4);
+//        row3.add(keyboardButton5);
+//        row4.add(keyboardButton6);
         keyboard.add(row1);
         keyboard.add(row2);
-        keyboard.add(row3);
-        keyboard.add(row4);
+//        keyboard.add(row3);
+//        keyboard.add(row4);
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }

@@ -14,7 +14,7 @@ public class TelegramBot extends TelegramWebhookBot {
     @Autowired
     private TelegramFacade telegramFacade;
 
-    private String webHookPath = "https://deliverydemobot.herokuapp.com/";
+    private String webHookPath = "https://2a157e90e425.ngrok.io";
     private String botUserName = "@javohir12345bot";
     private String botToken = "1756876870:AAFuwTUoqdATfEmPif0dtNR7PiOqa3VwaSc";
 
@@ -35,6 +35,8 @@ public class TelegramBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+
+        System.out.println(update.getMessage().getContact());
 
         BotApiMethod<?> replyMessageToUser = telegramFacade.handleUpdate(update);
         return replyMessageToUser;

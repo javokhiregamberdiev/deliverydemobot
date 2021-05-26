@@ -18,5 +18,6 @@ public enum BotState {
     EVENTS,
     LEAVE_FEEDBACK,
     INFORMATION,
-    SETTINGS
+    SETTINGS,
+    SELECT_LANG
 }
