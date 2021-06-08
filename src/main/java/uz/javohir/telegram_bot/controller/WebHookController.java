@@ -1,24 +1,31 @@
 package uz.javohir.telegram_bot.controller;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.javohir.telegram_bot.TelegramBot;
-import uz.javohir.telegram_bot.cache.UserDataCache;
+import uz.javohir.telegram_bot.botapi.TelegramFacade;
 
 @RestController
 public class WebHookController {
-    private final TelegramBot telegramBot;
 
-    public WebHookController(TelegramBot telegramBot) {
-        this.telegramBot = telegramBot;
-    }
+    @Autowired
+    private TelegramFacade telegramFacade;
+
+    @Autowired
+    private TelegramBot telegramBot;
+
+//    @RequestMapping(value = "/api/v1/telegram/{token}", method = RequestMethod.POST)
+//    public BotApiMethod<?> onUpdateReceived(@PathVariable String token, @RequestBody Update update) {
+//
+//        System.out.println(token);
+//
+//        return telegramFacade.handleUpdate(update);
+//    }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
+    public BotApiMethod<?> onUpdateReceived(@RequestBody Update update){
         return telegramBot.onWebhookUpdateReceived(update);
     }
 }

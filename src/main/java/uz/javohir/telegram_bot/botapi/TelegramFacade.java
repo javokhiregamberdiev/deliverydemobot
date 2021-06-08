@@ -1,5 +1,6 @@
 package uz.javohir.telegram_bot.botapi;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -7,27 +8,40 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import uz.javohir.telegram_bot.botapi.handler.UserProfileData;
 import uz.javohir.telegram_bot.cache.UserDataCache;
 import uz.javohir.telegram_bot.service.MainMenuService;
+import uz.javohir.telegram_bot.service.ReplyMessageService;
+import uz.javohir.telegram_bot.service.ShareContactService;
 
 @Component
 public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
+    private ReplyMessageService replyMessageService;
+    @Autowired
+    private ShareContactService shareContactService;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService, ReplyMessageService replyMessageService) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
+        this.replyMessageService = replyMessageService;
     }
 
     public BotApiMethod<?> handleUpdate(Update update) {
         SendMessage replyMessage = null;
         Message message = update.getMessage();
-        if (message.hasContact() && message != null){
+
+        if (update.hasCallbackQuery()){
+            return processCallbackQuery(update.getCallbackQuery());
+        }
+
+        if (message.hasContact() && message != null ){
             BotState botState = BotState.ASK_FINISH;
             userDataCache.setUsersCurrentBotState(message.getFrom().getId(), botState);
+            message.getLocation();
             replyMessage = botStateContext.processInputMessage(botState, message);
         }
 
@@ -110,27 +124,38 @@ public class TelegramFacade {
         return replyMessage;
     }
 
-//    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery){
-//
-//        final long chatId = buttonQuery.getMessage().getChatId();
-//        final int userId = buttonQuery.getFrom().getId();
-//        BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use the main menu");
-//
-//        if (buttonQuery.getData().equals("buttonYes")){
-//            callBackAnswer = new SendMessage(String.valueOf(chatId), "Enter the username");
-//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PASSWORD);
-//        }else if (buttonQuery.getData().equals("buttonNo")){
-//            callBackAnswer = sendAnswerCallbackQuery(buttonQuery.getFrom().getFirstName() + "Come back when you're ready", true, buttonQuery);
-//        }
-//        return callBackAnswer;
-//    }
-////    Come back when you're ready
-//    private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackQuery){
-//        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
-//        answerCallbackQuery.setCallbackQueryId(callbackQuery.getId());
-//        answerCallbackQuery.setShowAlert(alert);
-//        answerCallbackQuery.setText(text);
-//        return answerCallbackQuery;
-//    }
+    private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery){
+
+        UserProfileData userProfileData = userDataCache.getUserProfileData(buttonQuery.getFrom().getId());
+
+        final long chatId = buttonQuery.getMessage().getChatId();
+        final int userId = buttonQuery.getFrom().getId();
+
+        if (buttonQuery.getData().equals("english")){
+            userProfileData.setLocaleTag("en-EN");
+            userDataCache.saveUserProfileData(userId,userProfileData);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CODE);
+        }else if (buttonQuery.getData().equals("russian")){
+            userProfileData.setLocaleTag("ru-RU");
+            userDataCache.saveUserProfileData(userId,userProfileData);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CODE);
+        }else if (buttonQuery.getData().equals("uzbek")){
+            userProfileData.setLocaleTag("uz-UZ");
+            userDataCache.saveUserProfileData(userId,userProfileData);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CODE);
+        }
+
+        replyMessageService.setLanguage(userProfileData.getLocaleTag());
+
+        return shareContactService.getShareContactMsg(chatId, replyMessageService.getReplyText("reply.askPhone"));
+    }
+//    Come back when you're ready
+    private AnswerCallbackQuery sendAnswerCallbackQuery(String text, boolean alert, CallbackQuery callbackQuery){
+        AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
+        answerCallbackQuery.setCallbackQueryId(callbackQuery.getId());
+        answerCallbackQuery.setShowAlert(alert);
+        answerCallbackQuery.setText(text);
+        return answerCallbackQuery;
+    }
 
 }

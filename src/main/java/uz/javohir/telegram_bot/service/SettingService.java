@@ -1,10 +1,12 @@
 package uz.javohir.telegram_bot.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -14,14 +16,18 @@ import java.util.List;
 @Service
 public class SettingService {
 
+    @Autowired
+    ReplyMessageService replyMessageService;
+
     public SendMessage getSettingsMessage(final long chatId, final String textMessage) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getSettingsKeyboard();
-//        final SendMessage mainMenuMessage =
-//                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
-        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), "asd");
+        final SendMessage mainMenuMessage =
+                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+//        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), "asd");
 
 
-        return sendMessage;
+
+        return mainMenuMessage;
     }
 
     private ReplyKeyboardMarkup getSettingsKeyboard() {
@@ -36,12 +42,12 @@ public class SettingService {
 //        KeyboardButton keyboardButton2 = new KeyboardButton();
 //        keyboardButton2.setText("Edit number");
         KeyboardButton keyboardButton3 = new KeyboardButton();
-        keyboardButton3.setText("Select language");
+        keyboardButton3.setText(replyMessageService.getReplyText("button.editLang"));
         KeyboardButton keyboardButton4 = new KeyboardButton();
-        keyboardButton4.setText("Send Location");
+        keyboardButton4.setText(replyMessageService.getReplyText("button.sendLocation"));
         keyboardButton4.setRequestLocation(true);
         KeyboardButton keyboardButton5 = new KeyboardButton();
-        keyboardButton5.setText("Go home");
+        keyboardButton5.setText(replyMessageService.getReplyText("button.goHome"));
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
@@ -64,6 +70,7 @@ public class SettingService {
 
     private ReplyKeyboardMarkup forceReply(){
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        ReplyKeyboardRemove replyKeyboardRemove = new ReplyKeyboardRemove();
         return replyKeyboardMarkup;
     }
 

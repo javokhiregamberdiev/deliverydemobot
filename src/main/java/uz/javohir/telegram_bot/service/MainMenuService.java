@@ -1,5 +1,6 @@
 package uz.javohir.telegram_bot.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -11,6 +12,9 @@ import java.util.List;
 
 @Component
 public class MainMenuService {
+    @Autowired
+    private ReplyMessageService replyMessageService;
+
     public SendMessage getMainMenuMessage(final long chatId, final String textMessage) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
         final SendMessage mainMenuMessage =
@@ -27,11 +31,11 @@ public class MainMenuService {
         replyKeyboardMarkup.setOneTimeKeyboard(false);
 
         KeyboardButton keyboardButton1 = new KeyboardButton();
-        keyboardButton1.setText("Order");
+        keyboardButton1.setText(replyMessageService.getReplyText("button.order"));
         KeyboardButton keyboardButton2 = new KeyboardButton();
-        keyboardButton2.setText("Settings");
+        keyboardButton2.setText(replyMessageService.getReplyText("button.setting"));
         KeyboardButton keyboardButton3 = new KeyboardButton();
-        keyboardButton3.setText("Tracking");
+        keyboardButton3.setText(replyMessageService.getReplyText("button.tracking"));
         KeyboardButton keyboardButton4 = new KeyboardButton();
 //        keyboardButton4.setText("Leave feedback");
 //        KeyboardButton keyboardButton5 = new KeyboardButton();

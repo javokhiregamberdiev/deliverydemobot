@@ -1,5 +1,6 @@
 package uz.javohir.telegram_bot.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -11,6 +12,9 @@ import java.util.List;
 
 @Component
 public class ShareContactService {
+    @Autowired
+    private ReplyMessageService replyMessageService;
+
     public SendMessage getShareContactMsg(final Long chatId, final String textMessage){
         final ReplyKeyboardMarkup replyKeyboardMarkup = getContactKeyboard();
         final SendMessage languageMessage = createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
@@ -27,7 +31,7 @@ public class ShareContactService {
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
-        KeyboardButton button = new KeyboardButton("Share contact");
+        KeyboardButton button = new KeyboardButton(replyMessageService.getReplyText("button.contact"));
         button.setRequestContact(true);
         row1.add(button);
         keyboard.add(row1);
